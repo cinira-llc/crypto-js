@@ -1,0 +1,46 @@
+name: Test pull request
+on: [pull_request]
+
+permissions:
+  contents: read
+
+env:
+  CCF_TEST_DATA_PASSPHRASE: ${{ secrets.CCF_TEST_DATA_PASSPHRASE }}
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    permissions:
+      checks: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-java@v3
+        with:
+          java-version: "17"
+          distribution: temurin
+          cache: gradle
+      - uses: actions/setup-node@v3
+        with:
+          cache: npm
+          node-version: "lts/*"
+      - run: npm install
+        working-directory: ./packages/crypto-js
+      - name: Test crypto-java
+        run: ./gradlew --no-daemon javadoc test
+      - name: Test crypto-js
+        run: npm run test
+        working-directory: ./packages/crypto-js
+      - name: Publish test results for crypto-java
+        if: always()
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        with:
+          files: ./packages/crypto-java/build/test-results/test/*.xml
+      - name: Publish test results for crypto-js
+        if: always()
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        with:
+          files: ./packages/crypto-js/build/test-results.xml

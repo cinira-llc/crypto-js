@@ -1,2 +1,2 @@
-# cinira-shared
-Cinira shared libraries
+# crypto-js 
+Cinira common crypto library (JS)
