@@ -12,10 +12,11 @@
   "module": "./dist/esm/index.js",
   "repository": "https://github.com/mattj65817/cinira-shared.git",
   "scripts": {
-    "build": "tsc -p tsconfig.json && tsc -p tsconfig-cjs.json && ./package-fixup.sh",
+    "build": "tsc -p ./tsconfig.json && tsc -p ./tsconfig-cjs.json && ./package-fixup.sh",
     "clean": "rm -rf ./dist",
     "format": "prettier --write \"src/**/*.ts\"",
-    "lint": "tslint -p /tsconfig.json",
+    "lint": "tslint -p ./tsconfig.json",
+    "prepare": "npm run build",
     "prepublishOnly": "npm test && npm run lint",
     "test": "jest"
   },
@@ -55,6 +56,7 @@
       ]
     ]
   },
+  "types": "./dist/esm/index.d.ts",
   "jest": {
     "preset": "ts-jest"
   }
