@@ -10,7 +10,7 @@
   },
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
-  "repository": "https://github.com/mattj65817/cinira-shared.git",
+  "repository": "https://github.com/mattj65817/crypto-js.git",
   "scripts": {
     "build": "tsc -p ./tsconfig.json && tsc -p ./tsconfig-cjs.json && ./package-fixup.sh",
     "clean": "rm -rf ./dist",
