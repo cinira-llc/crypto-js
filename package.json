@@ -13,7 +13,7 @@
   "repository": "https://github.com/mattj65817/crypto-js.git",
   "scripts": {
     "build": "tsc -p ./tsconfig.json && tsc -p ./tsconfig-cjs.json && ./package-fixup.sh",
-    "clean": "rm -rf ./dist",
+    "clean": "rm -rf ./build ./dist",
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "eslint ./src",
     "prepare": "npm run build",
@@ -54,6 +54,15 @@
   },
   "types": "./dist/esm/index.d.ts",
   "jest": {
-    "preset": "ts-jest"
+    "preset": "ts-jest",
+    "reporters": [
+      [
+        "jest-junit",
+        {
+          "outputDirectory": "./build/report",
+          "outputName": "test-results.xml"
+        }
+      ]
+    ]
   }
 }
