@@ -1,7 +1,7 @@
 {
   "name": "@mattj65817/crypto-js",
   "version": "1.0.0",
-  "description": "Cinira shared crypto library for JavaScript",
+  "description": "Cinira Crypto library for JavaScript",
   "exports": {
     ".": {
       "import": "./dist/esm/index.js",
@@ -14,7 +14,7 @@
     "url": "git+https://github.com/mattj65817/crypto-js.git"
   },
   "scripts": {
-    "build": "tsc -p ./tsconfig.json && tsc -p ./tsconfig-cjs.json && ./package-fixup.sh",
+    "build": "tsc -p ./tsconfig.json && tsc -p ./tsconfig-cjs.json && tsc -p ./tsconfig-types.json",
     "clean": "rm -rf ./build ./dist",
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "eslint ./src",

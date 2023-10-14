@@ -1,2 +1,2 @@
 # crypto-js 
-Cinira common crypto library (JS)
+Cinira Crypto library for JavaScript
