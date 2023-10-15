@@ -22,13 +22,12 @@
     "prepublishOnly": "npm test && npm run lint",
     "test": "jest"
   },
+  "files": [
+    "./dist"
+  ],
   "keywords": [],
   "author": "Matt Jensen <mjensen65816@gmail.com>",
   "license": "ISC",
-  "dependencies": {
-    "immer": "^10.0.3",
-    "lodash": "^4.17.21"
-  },
   "devDependencies": {
     "@types/jest": "^29.5.5",
     "@types/lodash": "^4.14.199",
@@ -43,15 +42,14 @@
     "ts-jest": "^29.1.1",
     "typescript": "^5.2.2"
   },
+  "peerDependencies": {
+    "immer": ">=10.0.0",
+    "lodash": ">=4.17.0"
+  },
   "release": {
     "plugins": [
       "@semantic-release/github",
-      [
-        "@semantic-release/npm",
-        {
-          "tarballDir": "./dist"
-        }
-      ]
+      "@semantic-release/npm"
     ]
   },
   "types": "./dist/esm/index.d.ts",
