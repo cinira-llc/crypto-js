@@ -7,7 +7,7 @@ import {
   rsaDecrypt,
   rsaEncrypt,
   passwordDecrypt,
-  passwordEncrypt,
+  passwordEncrypt, pbeDecrypt, pbeEncrypt,
 } from "../src/Encryption";
 import * as crypto from "crypto";
 
@@ -37,6 +37,20 @@ describe("Encryption", () => {
       const encrypted = Buffer.from("xPKpvKYqxpKsKdqyny0v5OLGci1olCCl6PSVnH353vQWBDpMzfEgM8B1EZhKkoaGdov/E6/+V1ZXhGmGlZX9qjVScvxoUAJlE7mPD1pJm2K2laUxGiFWs/jiYf4S05aR2Bpdeb6YO1Dhb1mcXKJmb/tOydCyRc8+tSpWbDYdH9sPWcI81bBXViGrVroytPT7o4nlA0v9+cRG2Vk7PeAV9RD42pdt4sZliZaTGlz97JyyPOkVqAEToIlwFTW8rFraqAVnPRw0iAotfHF6qWWCd3hoiBD5Rvb76AI+MaP2DbnYOCOA8Z2e5KAeoYODG30WaaclnMg+jlAlkhehM5wZuw==", "base64");
       expect(decoder.decode(await rsaDecrypt(privateKey, encrypted))).toEqual("This is only a test.");
       expect(decoder.decode(await rsaDecrypt(decryptedPrivateKey, encrypted))).toEqual("This is only a test.");
+    });
+  });
+  describe("Jasypt interoperability", () => {
+    test("Decrypting data encrypted with Jasypt", async () => {
+      const encrypted = "93NreftgVZPwHN19bunzWquJgO5fHQ06jxRb9+rVOwftEpKWRtzsNroYXtMgmpkHRKRmqbOXoLt1s4k39cPt3w==";
+      const decrypted = await pbeDecrypt("testPassword", Buffer.from(encrypted, "base64"));
+      expect(decoder.decode(decrypted)).toEqual("This is only a test.");
+    });
+  });
+  describe("Password-based encryption", () => {
+    test("Encrypting and decrypting with the same password", async () => {
+      const encrypted = await pbeEncrypt("testPassword", message);
+      const decrypted = await pbeDecrypt("testPassword", encrypted);
+      expect(decoder.decode(decrypted)).toEqual(expected);
     });
   });
   describe("Symmetric-key encryption and decryption (AES-CBC-256)", () => {

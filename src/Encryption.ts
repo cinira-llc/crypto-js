@@ -229,6 +229,39 @@ export async function passwordDecrypt(password: string, data: Buffer, salt?: Buf
   );
 }
 
+export async function pbeDecrypt(password: string, data: Buffer) {
+  const salt = data.subarray(0, 16);
+  const iv = data.subarray(16, 32);
+  const key = await generateAESKey(password, salt);
+  return Buffer.from(
+    await subtle.decrypt(
+      {
+        ...AES_CBC_256_ALGORITHM_PARAMS,
+        iv,
+      },
+      key,
+      data.subarray(32),
+    ),
+  );
+}
+
+export async function pbeEncrypt(password: string, data: Buffer) {
+  const salt = getRandomValues(new Uint8Array(16));
+  const iv = getRandomValues(new Uint8Array(16));
+  const key = await generateAESKey(password, Buffer.from(salt));
+  const encrypted = Buffer.from(
+    await subtle.encrypt(
+      {
+        ...AES_CBC_256_ALGORITHM_PARAMS,
+        iv,
+      },
+      key,
+      data,
+    ),
+  );
+  return Buffer.concat([salt, iv, encrypted]);
+}
+
 /**
  * Apply password-based encryption using the equivalent of a Java `PBEWithHmacSHA256AndAES_256` cipher. The salt and/or
  * AES-256 initialization vector can be provided as 16-byte arrays or can be derived from the password if either or both
