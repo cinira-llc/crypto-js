@@ -1,13 +1,13 @@
 import {
   aesDecrypt,
   aesEncrypt,
+  aesPasswordDecrypt,
+  aesPasswordEncrypt,
   extractPrivateKey,
   extractPublicKey,
   generateAESKey,
   rsaDecrypt,
   rsaEncrypt,
-  passwordDecrypt,
-  passwordEncrypt, pbeDecrypt, pbeEncrypt,
 } from "../src/Encryption";
 import * as crypto from "crypto";
 
@@ -39,18 +39,16 @@ describe("Encryption", () => {
       expect(decoder.decode(await rsaDecrypt(decryptedPrivateKey, encrypted))).toEqual("This is only a test.");
     });
   });
-  describe("Jasypt interoperability", () => {
+  describe("Password-based encryption (AES-CBC-256/PBEWithHmacSHA256AndAES_256)", () => {
+    test("Encrypting and decrypting with the same password", async () => {
+      const encrypted = await aesPasswordEncrypt("testPassword", message);
+      const decrypted = await aesPasswordDecrypt("testPassword", encrypted);
+      expect(decoder.decode(decrypted)).toEqual(expected);
+    });
     test("Decrypting data encrypted with Jasypt", async () => {
       const encrypted = "93NreftgVZPwHN19bunzWquJgO5fHQ06jxRb9+rVOwftEpKWRtzsNroYXtMgmpkHRKRmqbOXoLt1s4k39cPt3w==";
-      const decrypted = await pbeDecrypt("testPassword", Buffer.from(encrypted, "base64"));
+      const decrypted = await aesPasswordDecrypt("testPassword", Buffer.from(encrypted, "base64"));
       expect(decoder.decode(decrypted)).toEqual("This is only a test.");
-    });
-  });
-  describe("Password-based encryption", () => {
-    test("Encrypting and decrypting with the same password", async () => {
-      const encrypted = await pbeEncrypt("testPassword", message);
-      const decrypted = await pbeDecrypt("testPassword", encrypted);
-      expect(decoder.decode(decrypted)).toEqual(expected);
     });
   });
   describe("Symmetric-key encryption and decryption (AES-CBC-256)", () => {
@@ -77,25 +75,6 @@ describe("Encryption", () => {
       const encrypted = Buffer.from("AL+FNCaWG1u2Yw9bepxzWu6zjTfwpXpvQXzNMhexmRu9tKbMreuxvpXvsc2XYFB3", "base64");
       const decrypted = await aesDecrypt(key, encrypted);
       expect(decoder.decode(decrypted)).toEqual("This is only a test.");
-    });
-  });
-  describe("Password-based encryption and decryption (AES-CBC-256/PBEWithHmacSHA256AndAES_256)", () => {
-    test("Decrypt data encrypted in Java", async () => {
-      const encrypted = Buffer.from("fV7lASQ7gfRujNdVLl4dWE00ZVOAvewmghzs9QYhoAY=", "base64");
-      const decrypted = await passwordDecrypt("testPasswordInJava", encrypted);
-      expect(decoder.decode(decrypted)).toEqual("This is only a test.");
-    });
-    test("Encrypting and decrypting with the same password", async () => {
-      const encrypted = await passwordEncrypt("testPasswordInJavascript", message);
-      const decrypted = await passwordDecrypt("testPasswordInJavascript", encrypted);
-      expect(decoder.decode(decrypted)).toEqual(expected);
-    });
-    test("Encrypting and decrypting with the same password and provided iv and salt", async () => {
-      const iv = Buffer.from("abcdefghijklmnop");
-      const salt = Buffer.from("bcdefghijklmnopq");
-      const encrypted = await passwordEncrypt("testPasswordInJavascript", message, salt, iv);
-      const decrypted = await passwordDecrypt("testPasswordInJavascript", encrypted, salt, iv);
-      expect(decoder.decode(decrypted)).toEqual(expected);
     });
   });
 
