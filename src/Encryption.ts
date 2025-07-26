@@ -301,29 +301,3 @@ export async function extractPublicKey(pem: string) {
   const data = Buffer.from(lines.join(""), "base64");
   return subtle.importKey("spki", data, RSA_OAEP_ALGORITHM_PARAMS, true, ["encrypt"]);
 }
-
-/**
- * Get the IV and salt values to use for password-based encryption/decryption. If `iv` and `salt` are provided, they are
- * validated and returned as a tuple. Otherwise, the SHA-256 hash of the password is used to generate the IV and salt.
- *
- * @param password the password.
- * @param salt the salt buffer or `null` to generate the salt from the password.
- * @param iv the IV buffer or `null` to generate the IV from the password.
- */
-function saltAndIv(password: string, salt?: Buffer, iv?: Buffer) {
-  let ivValue: Buffer, saltValue: Buffer;
-  if (null != iv && null != salt) {
-    ivValue = iv;
-    saltValue = salt;
-  } else {
-    const hash = createHash("SHA-256").update(utf8Encoder.encode(password)).digest();
-    ivValue = iv ?? hash.subarray(16, 32);
-    saltValue = salt ?? hash.subarray(0, 16);
-  }
-  if (16 !== ivValue.length) {
-    throw Error("IV must be exactly 16 bytes in length.");
-  } else if (16 !== saltValue.length) {
-    throw Error("Salt must be exactly 16 bytes in length.");
-  }
-  return [saltValue, ivValue] as const;
-}
