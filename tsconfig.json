@@ -2,7 +2,7 @@
   "extends": "./tsconfig-base.json",
   "compilerOptions": {
     "module": "esnext",
-    "outDir": "./dist/esm",
-    "target": "es2022"
+    "outDir": "dist/esm",
+    "target": "esnext"
   }
 }

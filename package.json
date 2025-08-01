@@ -13,7 +13,7 @@
     "url": "git+https://github.com/cinira-llc/crypto-js.git"
   },
   "scripts": {
-    "build": "tsc -p ./tsconfig.json && tsc -p ./tsconfig-cjs.json && tsc -p ./tsconfig-types.json && printf '{\\n\"type\":\"module\"\\n}' > dist/esm/package.json && printf '{\\n\"type\":\"commonjs\"\\n}' > dist/cjs/package.json",
+    "build": "tsc -p ./tsconfig.json && tsc -p ./tsconfig-cjs.json && printf '{\\n\"type\":\"module\"\\n}' > dist/esm/package.json && printf '{\\n\"type\":\"commonjs\"\\n}' > dist/cjs/package.json",
     "clean": "rm -rf ./build ./dist",
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "eslint ./src",
@@ -51,7 +51,6 @@
       "@semantic-release/npm"
     ]
   },
-  "types": "dist/types/index.d.ts",
   "jest": {
     "preset": "ts-jest",
     "reporters": [

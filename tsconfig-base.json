@@ -1,23 +1,28 @@
 {
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
-    "baseUrl": "./src",
+    "baseUrl": "src",
+    "declaration": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "moduleResolution": "node",
     "noImplicitAny": true,
     "preserveConstEnums": true,
-    "rootDir": "./src",
+    "rootDir": "src",
     "skipLibCheck": true,
     "sourceMap": true,
-    "strict": true
+    "strict": true,
+    "types": [
+      "node",
+      "jest"
+    ]
   },
   "exclude": [
-    "./node_modules",
-    "./dist",
-    "./__tests__"
+    "node_modules",
+    "dist",
+    "__tests__"
   ],
   "include": [
-    "./src"
+    "src"
   ]
 }
