@@ -1,4 +1,4 @@
-import {aesDecrypt, aesEncrypt, aesPasswordDecrypt, aesPasswordEncrypt, rsaDecrypt, rsaEncrypt} from "./Encryption";
+import {aesDecrypt, aesEncrypt, aesPasswordDecrypt, aesPasswordEncrypt, rsaDecrypt, rsaEncrypt} from "./Encryption.js";
 export {
     aesDecrypt,
     aesEncrypt,

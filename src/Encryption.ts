@@ -1,6 +1,6 @@
 import { createHash, getRandomValues, subtle } from "crypto";
 import { freeze } from "immer";
-import { ASN1Contents } from "./ASN1Contents";
+import { ASN1Contents } from "./ASN1Contents.js";
 
 /**
  * AES-CBC-256 algorithm parameters.
@@ -14,11 +14,11 @@ const AES_CBC_256_ALGORITHM_PARAMS = freeze({
  * Expected algorithm IDs for encrypted private keys.
  */
 const ALGORITHM_IDS = freeze({
-  AES_256_CBC: Buffer.of(0x60, 0x86, 0x48, 0x01, 0x65, 0x03, 0x04, 0x01, 0x2a),
-  HMAC_WITH_SHA256: Buffer.of(0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x02, 0x09),
-  PBKDF2: Buffer.of(0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x05, 0x0d),
-  PKCS5_PBES2: Buffer.of(0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x05, 0x0c),
-  RSA_ENCRYPTION: Buffer.of(0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x01, 0x01),
+  AES_256_CBC: Uint8Array.of(0x60, 0x86, 0x48, 0x01, 0x65, 0x03, 0x04, 0x01, 0x2a),
+  HMAC_WITH_SHA256: Uint8Array.of(0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x02, 0x09),
+  PBKDF2: Uint8Array.of(0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x05, 0x0d),
+  PKCS5_PBES2: Uint8Array.of(0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x05, 0x0c),
+  RSA_ENCRYPTION: Uint8Array.of(0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x01, 0x01),
 });
 
 /**
@@ -170,16 +170,7 @@ export async function generateAESKey(passphrase: string, salt?: Buffer) {
 export async function aesDecrypt(key: CryptoKey, ivAndEncrypted: Buffer) {
   const iv = ivAndEncrypted.subarray(0, 16);
   const encrypted = ivAndEncrypted.subarray(16);
-  return Buffer.from(
-    await subtle.decrypt(
-      {
-        ...AES_CBC_256_ALGORITHM_PARAMS,
-        iv,
-      },
-      key,
-      encrypted,
-    ),
-  );
+  return new Uint8Array(await subtle.decrypt({ ...AES_CBC_256_ALGORITHM_PARAMS, iv }, key, encrypted));
 }
 
 /**
@@ -191,16 +182,7 @@ export async function aesDecrypt(key: CryptoKey, ivAndEncrypted: Buffer) {
  */
 export async function aesEncrypt(key: CryptoKey, data: Buffer) {
   const iv = getRandomValues(new Uint8Array(16));
-  const encrypted = Buffer.from(
-    await subtle.encrypt(
-      {
-        ...AES_CBC_256_ALGORITHM_PARAMS,
-        iv,
-      },
-      key,
-      data,
-    ),
-  );
+  const encrypted = new Uint8Array(await subtle.encrypt({ ...AES_CBC_256_ALGORITHM_PARAMS, iv }, key, data));
   return Buffer.concat([iv, encrypted]);
 }
 
@@ -214,16 +196,7 @@ export async function aesPasswordDecrypt(password: string, encrypted: Buffer) {
   const salt = encrypted.subarray(0, 16);
   const iv = encrypted.subarray(16, 32);
   const key = await generateAESKey(password, salt);
-  return Buffer.from(
-    await subtle.decrypt(
-      {
-        ...AES_CBC_256_ALGORITHM_PARAMS,
-        iv,
-      },
-      key,
-      encrypted.subarray(32),
-    ),
-  );
+  return new Uint8Array(await subtle.decrypt({ ...AES_CBC_256_ALGORITHM_PARAMS, iv }, key, encrypted.subarray(32)));
 }
 
 /**
@@ -240,16 +213,14 @@ export async function aesPasswordEncrypt(password: string, data: Buffer) {
   const salt = getRandomValues(new Uint8Array(16));
   const iv = getRandomValues(new Uint8Array(16));
   const key = await generateAESKey(password, Buffer.from(salt));
-  const encrypted = Buffer.from(
-    await subtle.encrypt(
-      {
-        ...AES_CBC_256_ALGORITHM_PARAMS,
-        iv,
-      },
-      key,
-      data,
-    ),
-  );
+  const encrypted = new Uint8Array(await subtle.encrypt(
+    {
+      ...AES_CBC_256_ALGORITHM_PARAMS,
+      iv,
+    },
+    key,
+    data,
+  ));
   return Buffer.concat([salt, iv, encrypted]);
 }
 
