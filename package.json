@@ -52,7 +52,7 @@
     ]
   },
   "type": "module",
-  "types": "./dist/esm/index.d.ts",
+  "types": "./dist/types/index.d.ts",
   "jest": {
     "preset": "ts-jest",
     "reporters": [
