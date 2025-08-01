@@ -51,6 +51,7 @@
       "@semantic-release/npm"
     ]
   },
+  "type": "module",
   "types": "./dist/esm/index.d.ts",
   "jest": {
     "preset": "ts-jest",
