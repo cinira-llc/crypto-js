@@ -3,12 +3,12 @@
   "description": "Cinira Crypto library for JavaScript",
   "exports": {
     ".": {
-      "import": "./dist/esm/index.js",
-      "require": "./dist/cjs/index.js"
+      "import": "dist/esm/index.js",
+      "require": "dist/cjs/index.js"
     }
   },
-  "main": "./dist/cjs/index.js",
-  "module": "./dist/esm/index.js",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
   "repository": {
     "url": "git+https://github.com/cinira-llc/crypto-js.git"
   },
@@ -22,7 +22,7 @@
     "test": "jest"
   },
   "files": [
-    "./dist"
+    "dist"
   ],
   "keywords": [],
   "author": "Matt Jensen <mjensen@cinira.com>",
@@ -52,7 +52,7 @@
     ]
   },
   "type": "module",
-  "types": "./dist/types/index.d.ts",
+  "types": "dist/types/index.d.ts",
   "jest": {
     "preset": "ts-jest",
     "reporters": [
